@@ -57,12 +57,25 @@ module.exports = function(nforce, pluginName) {
     opts.uri = opts.oauth.instance_url + '/services/data/' + this.apiVersion
         + '/chatter/feed-elements/' + args.id + '/capabilities/comments/items';
     opts.method = 'POST';
-    var body = {
-      "body":
-        { "messageSegments":
-          [ { "type":"Text", "text": args.text } ]
-        }
+     if (args.id) {
+          var body = {
+            "body":
+              { "messageSegments":
+                [ { "type":"Mention", "id": args.id }, { "type":"Text", "text": args.text } ]
+              },
+              "feedElementType" : "FeedItem",
+              "subjectId" : args.id
       }
+        } else {
+          var body = {
+            "body":
+              { "messageSegments":
+                [ { "type":"Text", "text": args.text } ]
+              },
+              "feedElementType" : "FeedItem",
+              "subjectId" : args.id
+      }
+        }
     opts.body = JSON.stringify(body);
     return this._apiRequest(opts, opts.callback);
   });
@@ -85,14 +98,25 @@ module.exports = function(nforce, pluginName) {
     if (validator.error) return callback(new Error(validator.message), null);
     opts.uri = opts.oauth.instance_url + '/services/data/' + this.apiVersion
         + '/chatter/feed-elements';
-    var body = {
-      "body":
-        { "messageSegments":
-          [ { "type":"Text", "text": args.text } ]
-        },
-        "feedElementType" : "FeedItem",
-        "subjectId" : args.id
-      }
+        if (args.id) {
+      		var body = {
+      			"body":
+			        { "messageSegments":
+			          [ { "type":"Mention", "id": args.id }, { "type":"Text", "text": args.text } ]
+			        },
+			        "feedElementType" : "FeedItem",
+			        "subjectId" : args.id
+			}
+        } else {
+        	var body = {
+      			"body":
+			        { "messageSegments":
+			          [ { "type":"Text", "text": args.text } ]
+			        },
+			        "feedElementType" : "FeedItem",
+			        "subjectId" : args.id
+			}
+        }
     opts.method = 'POST';
     opts.body = JSON.stringify(body);
     return this._apiRequest(opts, opts.callback);
