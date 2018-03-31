@@ -1,5 +1,6 @@
 nforce-chatter
 ======
+-----| THIS FORK UPDATED TO INCLUDE ABILITY TO @MENTION |-----
 
 **nforce-chatter** is a [Chatter REST  API](http://www.salesforce.com/us/developer/docs/chatterapi/) plugin for [nforce](https://github.com/kevinohara80/nforce).
 
