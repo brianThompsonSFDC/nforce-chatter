@@ -1,6 +1,8 @@
 nforce-chatter
 ======
 -----| THIS FORK UPDATED TO INCLUDE ABILITY TO @MENTION |-----
+postFeedItem() and postComment() take the argument variable 'atUser'
+this is the user object id of the individual you are mentioning. It inserts text so no need to redundantly include the @name text. 
 
 **nforce-chatter** is a [Chatter REST  API](http://www.salesforce.com/us/developer/docs/chatterapi/) plugin for [nforce](https://github.com/kevinohara80/nforce).
 
