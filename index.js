@@ -57,25 +57,12 @@ module.exports = function(nforce, pluginName) {
     opts.uri = opts.oauth.instance_url + '/services/data/' + this.apiVersion
         + '/chatter/feed-elements/' + args.id + '/capabilities/comments/items';
     opts.method = 'POST';
-     if (args.id) {
-          var body = {
-            "body":
-              { "messageSegments":
-                [ { "type":"Mention", "id": args.id }, { "type":"Text", "text": args.text } ]
-              },
-              "feedElementType" : "FeedItem",
-              "subjectId" : args.id
-      }
-        } else {
-          var body = {
-            "body":
-              { "messageSegments":
-                [ { "type":"Text", "text": args.text } ]
-              },
-              "feedElementType" : "FeedItem",
-              "subjectId" : args.id
-      }
+    var body = {
+      "body":
+        { "messageSegments":
+          [ { "type":"Text", "text": args.text } ]
         }
+      }
     opts.body = JSON.stringify(body);
     return this._apiRequest(opts, opts.callback);
   });
@@ -93,29 +80,29 @@ module.exports = function(nforce, pluginName) {
 
   // http://www.salesforce.com/us/developer/docs/chatterapi/Content/quickreference_post_feed_item.htm
   plugin.fn('postFeedItem', function(args, callback) {
-    var validator = validate(args, ['id', 'text']);
+    var validator = validate(args, ['id', 'text', 'atUser']);
     var opts = this._getOpts(args, callback);
     if (validator.error) return callback(new Error(validator.message), null);
     opts.uri = opts.oauth.instance_url + '/services/data/' + this.apiVersion
         + '/chatter/feed-elements';
-        if (args.id) {
-      		var body = {
-      			"body":
-			        { "messageSegments":
-			          [ { "type":"Mention", "id": args.id }, { "type":"Text", "text": args.text } ]
-			        },
-			        "feedElementType" : "FeedItem",
-			        "subjectId" : args.id
-			}
+                if (args.atUser) {
+          var body = {
+            "body":
+              { "messageSegments":
+                [ { "type":"Mention", "id": args.atUser }, { "type":"Text", "text": args.text } ]
+              },
+              "feedElementType" : "FeedItem",
+              "subjectId" : args.id
+      }
         } else {
-        	var body = {
-      			"body":
-			        { "messageSegments":
-			          [ { "type":"Text", "text": args.text } ]
-			        },
-			        "feedElementType" : "FeedItem",
-			        "subjectId" : args.id
-			}
+          var body = {
+            "body":
+              { "messageSegments":
+                [ { "type":"Text", "text": args.text } ]
+              },
+              "feedElementType" : "FeedItem",
+              "subjectId" : args.id
+      }
         }
     opts.method = 'POST';
     opts.body = JSON.stringify(body);
