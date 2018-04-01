@@ -51,18 +51,30 @@ module.exports = function(nforce, pluginName) {
 
   // http://www.salesforce.com/us/developer/docs/chatterapi/Content/quickreference_post_comment_to_feed_element.htm
   plugin.fn('postComment', function(args, callback) {
-    var validator = validate(args, ['id', 'text']);
+    var validator = validate(args, ['id', 'text', 'atUser']);
     var opts = this._getOpts(args, callback);
     if (validator.error) return callback(new Error(validator.message), null);
     opts.uri = opts.oauth.instance_url + '/services/data/' + this.apiVersion
         + '/chatter/feed-elements/' + args.id + '/capabilities/comments/items';
     opts.method = 'POST';
-    var body = {
-      "body":
-        { "messageSegments":
-          [ { "type":"Text", "text": args.text } ]
-        }
+     var body = {
+            "body":
+              { "messageSegments":
+                [ { "type":"Mention", "id": args.atUser }, { "type":"Text", "text": args.text } ]
+              },
+              "feedElementType" : "FeedItem",
+              "subjectId" : args.id
       }
+        } else {
+          var body = {
+            "body":
+              { "messageSegments":
+                [ { "type":"Text", "text": args.text } ]
+              },
+              "feedElementType" : "FeedItem",
+              "subjectId" : args.id
+      }
+        }
     opts.body = JSON.stringify(body);
     return this._apiRequest(opts, opts.callback);
   });
